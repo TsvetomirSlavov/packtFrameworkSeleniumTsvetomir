@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -19,6 +20,10 @@ import org.openqa.selenium.support.ui.Select;
 
 import com.packtFramework.Configuration;
 import com.packtFramework.Driver;
+import com.packtFramework.ui.controls.Control;
+import com.packtFramework.ui.controls.Edit;
+
+import com.packtFramework.ui.controls.SelectList;
 
 @RunWith(Parameterized.class)
 public class BookingSearchTest {
@@ -49,7 +54,8 @@ public class BookingSearchTest {
 	public void setUp() throws Exception{
 		Configuration.load();
 		Configuration.print();
-		String baseUrl = Configuration.get("url");		
+		String baseUrl = Configuration.get("url");
+		// geckodriver.exe to work properly instead of just geckodriver
 		System.setProperty("webdriver.gecko.driver", new File("drivers/geckodriver.exe").getAbsolutePath());
 		System.setProperty("webdriver.chrome.driver", new File("drivers/chromedriver.exe").getAbsolutePath());
 		
@@ -66,16 +72,29 @@ public class BookingSearchTest {
 
 	@Test
 	public void testValidSearch(){
-
-		driver.findElement(By.id("ss")).click();
-		driver.findElement(By.id("ss")).clear();
-		driver.findElement(By.id("ss")).sendKeys(this.destination);
-		driver.findElement(By.xpath("//div[@class='sb-date-field__display']")).click();
-		driver.findElement(By.xpath("//span[contains(.,'23')]")).click();
-		new Select(driver.findElement(By.id("group_adults"))).selectByVisibleText("1");
-		driver.findElement(By.cssSelector("#group_adults > option[value=\"1\"]")).click();
-		driver.findElement(By.xpath("//button[@class='sb-searchbox__button  ']")).click();
-		driver.findElement(By.id("ss")).click();
+		
+		Edit editDestination = new Edit(driver, By.id("ss"));
+		Control checkoutDayExpand = new Control(driver, By.cssSelector("sb-date-field__chevron bicon-downchevron"));
+		Control checkoutDayToday = new Control(driver, By.xpath("//span[contains(.,'26')]"));
+		Control checkinDayToday = new Control(driver, By.xpath("//*[@id='frm']/div[3]/div/div[1]/div[1]/div[2]/div/div[2]/div[2]/div[3]/div/div/div[1]/table/tbody/tr[5]/td[1]/span"));
+		Control radioLeisure = new Control(driver, By.xpath("//input[contains(@class,'leisure-booker')]"));
+		Control radioBusiness = new Control(driver, By.xpath("//input[contains(@value,'business')]"));
+		SelectList selectAdultsNumber = new SelectList(driver, By.id("group_adults"));
+		Control buttonSubmit = new Control(driver, By.xpath("//button[@type='submit']"));
+		// works with a selector only if it selects the whole list item not just the text London
+		Control ajaxAutoSuggestDropListItem = new Control(driver, By.xpath("//*[@id='frm']/div[2]/div/div[1]/ul[1]/li[1]"));		
+		
+		editDestination.setText(this.destination);
+		ajaxAutoSuggestDropListItem.click();
+		checkinDayToday.click();
+		if (this.isLeisure) {
+			radioLeisure.click();
+		} else {
+			radioBusiness.click();
+		}
+		selectAdultsNumber.selectByText("" + this.numberOfAdults);
+		buttonSubmit.click();
+		editDestination.click();
 	}
 	
 }

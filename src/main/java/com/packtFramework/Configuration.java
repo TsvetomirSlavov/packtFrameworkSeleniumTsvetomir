@@ -47,6 +47,12 @@ public final class Configuration {
 		}
 	}
 	
-	
+	public static long timeout() {
+		String value = get("timeout").trim();
+		return Long.parseLong(value);
+	}
 
+	
+	
+	
 }
