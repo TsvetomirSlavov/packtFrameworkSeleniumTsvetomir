@@ -2,6 +2,7 @@ package com.packtFramework.ui.controls;
 
 
 
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -10,25 +11,29 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.packtFramework.Configuration;
+import com.packtFramework.ui.Page;
 
 public class Control {
 
-	public static final long TIMEOUT = Configuration.timeout();
-	WebDriver driver;
-	By locator;
+	protected static final long TIMEOUT = Configuration.timeout();
+	private Page parent;
+	private By locator;
 	
-	public Control(WebDriver driver, By locator) {
-		super();
-		this.driver = driver;
-		this.locator = locator;
+	public Control(Page parentValue, By locatorValue) {
+		this.parent = parentValue;
+		this.locator = locatorValue;
 	}
 	
-	public WebElement getElement(){
-		return driver.findElement(locator);
+	public WebDriver getDriver() {
+		return parent.getDriver();
+	}
+	
+	public WebElement element(){
+		return getDriver().findElement(locator);
 	}
 	
 	public boolean exists(long timeout) {
-		WebDriverWait wait = new WebDriverWait(driver, timeout);
+		WebDriverWait wait = new WebDriverWait(getDriver(), timeout);
 		try {
 			wait.until(ExpectedConditions.presenceOfElementLocated(locator));
 		} catch (TimeoutException e) {
@@ -42,8 +47,10 @@ public class Control {
 	}
 	
 	public void click() {
-		exists();
-		this.getElement().click();
+		Assert.assertTrue(
+			"Unable to find Element: " + this.locator.toString(),
+			exists());
+		this.element().click();
 	}
 
 }

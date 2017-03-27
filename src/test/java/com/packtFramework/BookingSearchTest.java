@@ -20,6 +20,9 @@ import org.openqa.selenium.support.ui.Select;
 
 import com.packtFramework.Configuration;
 import com.packtFramework.Driver;
+import com.packtFramework.tests.pages.SearchPage;
+import com.packtFramework.tests.pages.SearchResultsPage;
+import com.packtFramework.ui.PageFactory;
 import com.packtFramework.ui.controls.Control;
 import com.packtFramework.ui.controls.Edit;
 
@@ -33,6 +36,9 @@ public class BookingSearchTest {
 	// personal or business travel
 	private boolean isLeisure;
 	private int numberOfAdults;		
+	
+	public SearchPage searchPage;
+	public SearchResultsPage searchResultsPage;
 	
 	public BookingSearchTest(String destination, boolean isLeisure, int numberOfAdults) {
 		super();
@@ -62,7 +68,9 @@ public class BookingSearchTest {
 		DesiredCapabilities cap = new DesiredCapabilities();
 		Driver.add(Configuration.get("browser"), cap);
 		driver = Driver.current();
-		driver.get(baseUrl);
+		searchPage = PageFactory.init(SearchPage.class);
+		searchPage.navigate();
+		
 	}
 	
 	@After
@@ -71,30 +79,19 @@ public class BookingSearchTest {
 	}
 
 	@Test
-	public void testValidSearch(){
+	public void testValidSearch() throws Exception{
+
+		searchPage.editDestination.setText(destination);
+		searchPage.ajaxAutoSuggestDropListItem.click();
+		searchPage.checkinDayToday.click();
+		searchPage.selectTravelFor(true);
 		
-		Edit editDestination = new Edit(driver, By.id("ss"));
-		Control checkoutDayExpand = new Control(driver, By.cssSelector("sb-date-field__chevron bicon-downchevron"));
-		Control checkoutDayToday = new Control(driver, By.xpath("//span[contains(.,'26')]"));
-		Control checkinDayToday = new Control(driver, By.xpath("//*[@id='frm']/div[3]/div/div[1]/div[1]/div[2]/div/div[2]/div[2]/div[3]/div/div/div[1]/table/tbody/tr[5]/td[1]/span"));
-		Control radioLeisure = new Control(driver, By.xpath("//input[contains(@class,'leisure-booker')]"));
-		Control radioBusiness = new Control(driver, By.xpath("//input[contains(@value,'business')]"));
-		SelectList selectAdultsNumber = new SelectList(driver, By.id("group_adults"));
-		Control buttonSubmit = new Control(driver, By.xpath("//button[@type='submit']"));
-		// works with a selector only if it selects the whole list item not just the text London
-		Control ajaxAutoSuggestDropListItem = new Control(driver, By.xpath("//*[@id='frm']/div[2]/div/div[1]/ul[1]/li[1]"));		
+		searchPage.selectAdultsNumber.selectByText("" + numberOfAdults);
+		searchPage.buttonSubmit.click();
 		
-		editDestination.setText(this.destination);
-		ajaxAutoSuggestDropListItem.click();
-		checkinDayToday.click();
-		if (this.isLeisure) {
-			radioLeisure.click();
-		} else {
-			radioBusiness.click();
-		}
-		selectAdultsNumber.selectByText("" + this.numberOfAdults);
-		buttonSubmit.click();
-		editDestination.click();
+		searchResultsPage = PageFactory.init(SearchResultsPage.class);
+		searchResultsPage.editDestination.click();
+		searchResultsPage.isTextPresent(destination);
 	}
 	
 }
