@@ -58,15 +58,21 @@ public class BookingSearchTest extends TestCommon{
 	public void testValidSearch() throws Exception{
 
 		searchPage.editDestination.setText(destination);
-		searchPage.ajaxAutoSuggestDropListItem.click();
+/*		if (Configuration.platform().isWeb()) {
+ * 			// I have another method to do that in LocationLookupEdit
+			searchPage.ajaxAutoSuggestDropListItem.click();
+		}*/
+				
+		//ToDo implement here the same different behavior with the Calendar popup
 		searchPage.checkinDayToday.click();
-		searchPage.selectTravelFor(true);
+		searchPage.selectTravelFor(isLeisure);
 		
+		//Continue on my own to add a functionality for this action to choose between Web and Mobile
 		searchPage.selectAdultsNumber.selectByText("" + numberOfAdults);
 		searchPage.buttonSubmit.click();
 		
 		searchResultsPage = PageFactory.init(Driver.current(), SearchResultsPage.class);
-		searchResultsPage.editDestination.click();
+		//searchResultsPage.editDestination.click();
 		searchResultsPage.isTextPresent(destination);
 		searchResultsPage.captureScreenShot("./build/image01.png");
 	}

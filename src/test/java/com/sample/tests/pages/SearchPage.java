@@ -10,12 +10,13 @@ import com.sample.framework.ui.Page;
 import com.sample.framework.ui.controls.Control;
 import com.sample.framework.ui.controls.Edit;
 import com.sample.framework.ui.controls.SelectList;
+import com.sample.tests.controls.LocationLookupEdit;
 
 public class SearchPage extends Page {
 	
 	@FindBy(locator = "ss")
 	@FindBy(locator = "search_searchInput", platform = Platform.ANDROID_NATIVE)
-	public Edit editDestination;
+	public LocationLookupEdit editDestination;
 	
 	//@FindBy(locator = "css=sb-date-field__chevron bicon-downchevron")
 	//public Control checkoutDayExpand;
@@ -23,7 +24,7 @@ public class SearchPage extends Page {
 	//@FindBy(locator = "xpath=//span[contains(.,'26')]")
 	//public Control checkoutDayToday;
 	
-	@FindBy(locator = "xpath=//*[@id='frm']/div[3]/div/div[1]/div[1]/div[2]/div/div[2]/div[2]/div[3]/div/div/div[1]/table/tbody/tr[5]/td[5]/span")
+	@FindBy(locator = "xpath=//*[@id='frm']/div[3]/div/div[1]/div[1]/div[2]/div/div[2]/div[2]/div[3]/div/div/div[1]/table/tbody/tr[2]/td[2]")
 	@FindBy(locator = "today_msg", platform = Platform.ANDROID_NATIVE)
 	public Control checkinDayToday;
 	
@@ -46,11 +47,11 @@ public class SearchPage extends Page {
 	@FindBy(locator = "search_search", platform = Platform.ANDROID_NATIVE)
 	public Control buttonSubmit;
 	
-	// works with a selector only if it selects the whole list item not just the text London
+/*	// works with a selector only if it selects the whole list item not just the text London
 	@FindBy(locator = "xpath=//*[@id='frm']/div[2]/div/div[1]/ul[1]/li[1]")
 	//this is not yet the correct locator for mobile native app
 	@FindBy(locator = "search_searchInput", platform = Platform.ANDROID_NATIVE)
-	public Control ajaxAutoSuggestDropListItem;		
+	public Control ajaxAutoSuggestDropListItem;*/		
 
 	public SearchPage(WebDriver driver) {
 		super(driver);

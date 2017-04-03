@@ -12,7 +12,7 @@ public class Edit extends Control {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void setText(String value) {
+	public void setText(String value) throws Exception {
 		this.click();
 		this.element().clear();
 		this.element().sendKeys(value);

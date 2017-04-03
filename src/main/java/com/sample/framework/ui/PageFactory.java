@@ -22,11 +22,11 @@ public class PageFactory {
 		} else if (input.matches("^id=(.*)")) {
 			return By.id(input.substring("id=".length()));
 		} else if (input.matches("^name=(.*)")) {
-			return By.id(input.substring("name=".length()));
+			return By.name(input.substring("name=".length()));
 		} else if (input.matches("^css=(.*)")) {
-			return By.id(input.substring("css=".length()));
+			return By.cssSelector(input.substring("css=".length()));
 		} else if (input.matches("^class=(.*)")) {
-			return By.id(input.substring("class=".length()));
+			return By.className(input.substring("class=".length()));
 		} else {
 			return By.id(input);
 		}

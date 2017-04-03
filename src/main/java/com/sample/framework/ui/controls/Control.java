@@ -22,14 +22,35 @@ public class Control {
 	public Control(Page parentValue, By locatorValue) {
 		this.parent = parentValue;
 		this.locator = locatorValue;
-	}
+	}	
 	
+	public Page getParent() {
+		return parent;
+	}
+
 	public WebDriver getDriver() {
 		return parent.getDriver();
 	}
 	
 	public WebElement element(){
 		return getDriver().findElement(locator);
+	}
+	
+	public boolean visible(long timeout) {
+		WebDriverWait wait = new WebDriverWait(getDriver(), timeout);
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+		} catch (TimeoutException e) {
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean visible() {
+		Assert.assertTrue(
+				"Unable to find Element: " + this.locator.toString(),
+				exists());
+		return visible(TIMEOUT);
 	}
 	
 	public boolean exists(long timeout) {
@@ -48,8 +69,8 @@ public class Control {
 	
 	public void click() {
 		Assert.assertTrue(
-			"Unable to find Element: " + this.locator.toString(),
-			exists());
+			"Unable to wait for visibility of Element: " + this.locator.toString(),
+			visible());
 		this.element().click();
 	}
 
