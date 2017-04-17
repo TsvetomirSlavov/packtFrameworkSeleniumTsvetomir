@@ -57,13 +57,21 @@ public class BookingSearchTest extends TestCommon{
 	@Test
 	public void testValidSearch() throws Exception{
 
+		//if (!Configuration.platform().isWeb()) {
+		//	if ((recource-id com.android.packageinstaller:id/permission_allow_button).exists()) {
+		//		com.android.packageinstaller:id/permission_allow_button.tap();
+		//	}
+		//}
+		
 		searchPage.editDestination.setText(destination);
+		
 /*		if (Configuration.platform().isWeb()) {
  * 			// I have another method to do that in LocationLookupEdit
 			searchPage.ajaxAutoSuggestDropListItem.click();
 		}*/
-				
+				//Part 13 again from the beginnning 
 		//ToDo implement here the same different behavior with the Calendar popup
+		
 		searchPage.checkinDayToday.click();
 		searchPage.selectTravelFor(isLeisure);
 		
